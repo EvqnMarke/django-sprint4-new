@@ -1,9 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
+
 from core.constants import MODERATION_ERROR
-
-
-from .models import Post, Comment
+from .models import Comment, Post
 from .moderation import is_toxic
 
 
@@ -11,14 +10,7 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = (
-            'title',
-            'text',
-            'pub_date',
-            'location',
-            'category',
-            'image',
-        )
+        exclude = ('author',)
         widgets = {
             'pub_date': forms.DateTimeInput(
                 format='%Y-%m-%dT%H:%M',

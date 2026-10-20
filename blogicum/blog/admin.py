@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import Post, Category, Location
+from django.utils.safestring import mark_safe
 
+from .models import Category, Comment, Location, Post
 
 admin.site.empty_value_display = 'Не задано'
 
@@ -33,6 +34,7 @@ class LocationAdmin(admin.ModelAdmin):
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = (
+        'get_image',
         'title',
         'pub_date',
         'author',
@@ -54,3 +56,42 @@ class PostAdmin(admin.ModelAdmin):
         'pub_date',
     )
     list_display_links = ('title',)
+
+    fieldsets = (
+        ('Основная информация', {
+            'fields': ('title', 'text', 'image'),
+        }),
+        ('Информация об авторе и связях', {
+            'fields': ('author', 'category', 'location'),
+        }),
+        ('Даты и публикация', {
+            'fields': ('pub_date', 'is_published'),
+        }),
+    )
+
+    @admin.display(description='Изображение')
+    def get_image(self, obj):
+        if obj.image:
+            return mark_safe(
+                f'<img src="{obj.image.url}" width="50" '
+                f'height="50" style="object-fit: cover;">',
+            )
+        return None
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = (
+        'text',
+        'post',
+        'author',
+        'created_at',
+    )
+
+    search_fields = (
+        'text',
+        'author__username',
+        'post__title',
+    )
+
+    list_filter = ('created_at',)

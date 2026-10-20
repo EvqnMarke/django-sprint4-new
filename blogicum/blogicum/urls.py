@@ -4,12 +4,12 @@ from django.contrib import admin
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import include, path, reverse_lazy
 from django.views.generic import CreateView
+
 from debug_toolbar.toolbar import debug_toolbar_urls
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('blog.urls', namespace='blog')),
     path('pages/', include('pages.urls', namespace='pages')),
     path(
         'auth/registration/',
@@ -21,6 +21,7 @@ urlpatterns = [
         name='registration',
     ),
     path('auth/', include('django.contrib.auth.urls')),
+    path('', include('blog.urls', namespace='blog')),
 ]
 
 if settings.DEBUG:
@@ -28,8 +29,7 @@ if settings.DEBUG:
         settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT,
     )
-
-urlpatterns += debug_toolbar_urls()
+    urlpatterns += debug_toolbar_urls()
 
 handler404 = 'pages.views.page_not_found'
 handler403 = 'pages.views.csrf_failure'

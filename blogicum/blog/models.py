@@ -1,19 +1,18 @@
 from textwrap import shorten
-from django.db import models
-from django.contrib.auth import get_user_model
-from core.models import PublishedModel
 
+from django.contrib.auth import get_user_model
+from django.db import models
+from django.urls import reverse
+
+from core.constants import MAX_LENGTH_CHARFIELD, SHORT_TITLE_LENGTH
+from core.models import PublishedModel
 
 User = get_user_model()
 
 
-MAX_LENGHT_CHARFIELD = 256
-SHORT_TITLE_LENGTH = 30
-
-
 class Category(PublishedModel):
     title = models.CharField(
-        max_length=MAX_LENGHT_CHARFIELD,
+        max_length=MAX_LENGTH_CHARFIELD,
         verbose_name='Заголовок')
     description = models.TextField(verbose_name='Описание')
     slug = models.SlugField(
@@ -35,7 +34,7 @@ class Category(PublishedModel):
 
 class Location(PublishedModel):
     name = models.CharField(
-        max_length=MAX_LENGHT_CHARFIELD,
+        max_length=MAX_LENGTH_CHARFIELD,
         verbose_name='Название места')
 
     class Meta(PublishedModel.Meta):
@@ -48,7 +47,7 @@ class Location(PublishedModel):
 
 class Post(PublishedModel):
     title = models.CharField(
-        max_length=MAX_LENGHT_CHARFIELD,
+        max_length=MAX_LENGTH_CHARFIELD,
         verbose_name='Заголовок')
     text = models.TextField(verbose_name='Текст')
     pub_date = models.DateTimeField(
@@ -91,6 +90,9 @@ class Post(PublishedModel):
     def __str__(self):
         return shorten(self.title, SHORT_TITLE_LENGTH, placeholder='...')
 
+    def get_absolute_url(self):
+        return reverse('blog:post_detail', kwargs={'post_id': self.pk})
+
 
 class Comment(models.Model):
     text = models.TextField(verbose_name='Текст')
@@ -113,4 +115,9 @@ class Comment(models.Model):
         default_related_name = 'comments'
 
     def __str__(self):
-        return shorten(self.text, SHORT_TITLE_LENGTH, placeholder='...')
+        short_text = shorten(self.text, SHORT_TITLE_LENGTH, placeholder='...')
+        short_post_title = shorten(
+            self.post.title,
+            SHORT_TITLE_LENGTH, placeholder='...',
+        )
+        return f'{self.author.username}: {short_text} -> {short_post_title}'
