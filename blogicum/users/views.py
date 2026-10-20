@@ -7,7 +7,7 @@ from django.views.generic import ListView, UpdateView
 from blog.models import Post
 from blog.services import get_published_posts
 from core.constants import POSTS_BY_PAGE
-from .forms import ProfileForm
+from users.forms import ProfileForm
 
 User = get_user_model()
 
@@ -15,7 +15,6 @@ User = get_user_model()
 class ProfileListView(ListView):
     model = Post
     template_name = 'blog/profile.html'
-    context_object_name = 'page_obj'
     paginate_by = POSTS_BY_PAGE
 
     def get_queryset(self):

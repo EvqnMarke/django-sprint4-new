@@ -1,11 +1,11 @@
 from django.urls import path
 
-from users.views import ProfileListView, ProfileUpdateView
-from .views import (
+from blog.views import (
     CommentCreateView, CommentDeleteView, CommentUpdateView,
     PostCreateView, PostDeleteView, PostUpdateView,
     category_posts, index, post_detail,
 )
+from users.views import ProfileListView, ProfileUpdateView
 
 app_name = 'blog'
 

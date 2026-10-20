@@ -1,9 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
+from blog.models import Comment, Post
+from blog.moderation import is_toxic
 from core.constants import MODERATION_ERROR
-from .models import Comment, Post
-from .moderation import is_toxic
 
 
 class PostForm(forms.ModelForm):

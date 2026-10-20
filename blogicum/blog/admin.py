@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from .models import Category, Comment, Location, Post
+from blog.models import Category, Comment, Location, Post
 
 admin.site.empty_value_display = 'Не задано'
 

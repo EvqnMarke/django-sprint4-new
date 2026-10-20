@@ -5,10 +5,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import CreateView, DeleteView, UpdateView
 
-from .forms import CommentForm, PostForm
-from .mixins import OnlyAuthorMixin, OnlyCommentAuthorMixin
-from .models import Category, Comment, Post
-from .services import get_paginated_page, get_published_posts
+from blog.forms import CommentForm, PostForm
+from blog.mixins import OnlyAuthorMixin, OnlyCommentAuthorMixin
+from blog.models import Category, Comment, Post
+from blog.services import get_paginated_page, get_published_posts
 
 
 def index(request):
@@ -74,10 +74,6 @@ class PostUpdateView(LoginRequiredMixin, OnlyAuthorMixin, UpdateView):
     form_class = PostForm
     template_name = 'blog/create.html'
     pk_url_kwarg = 'post_id'
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
 
 
 class PostDeleteView(LoginRequiredMixin, OnlyAuthorMixin, DeleteView):

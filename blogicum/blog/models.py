@@ -116,8 +116,4 @@ class Comment(models.Model):
 
     def __str__(self):
         short_text = shorten(self.text, SHORT_TITLE_LENGTH, placeholder='...')
-        short_post_title = shorten(
-            self.post.title,
-            SHORT_TITLE_LENGTH, placeholder='...',
-        )
-        return f'{self.author.username}: {short_text} -> {short_post_title}'
+        return f'{self.author.username}: {short_text} -> {self.post}'
